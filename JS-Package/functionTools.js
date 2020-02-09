@@ -3,17 +3,15 @@
  * author: lpj
  */
 
-// 返回传入的字符串的字节长度
+// 返回传入的字符串的字节长度 ( 一个汉字两个字节,一个英文字母一个字节 )
 function getStrByteLen(target) {
     if (typeof target == "string") {
         var len = target.length,
-            res = len;
+            count = len;
         for (var i = 0; i < len; i++) {
-            if (target.charCodeAt(i) > 255) {
-                res++;
-            }
+            target.charCodeAt(i) > 255 && count++;
         }
-        return res;
+        return count;
     }
 }
 
