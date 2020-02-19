@@ -71,6 +71,45 @@ Array.prototype.unique = function () {
   return arr;
 }
 
+// 原型链编程封装数组push方法
+Array.prototype.push = function () {
+  for (var i = 0; i < arguments.length; i++) {
+    this[this.length] = arguments[i];
+  }
+  return this.length;
+}
+
+// 纯原生JS, 原型链编程封装数组unshift方法 ( 改变原数组 )
+Array.prototype.unshift = function () {
+  var arguLen = arguments.length,
+    totalLength = arguLen + this.length;
+  for (var i = arguLen; i < totalLength; i++) {
+    this[i] = this[i - arguLen];
+  }
+  for (var i = 0; i < arguLen; i++) {
+    this[i] = arguments[i];
+  }
+  return this.length;
+}
+
+// 利用splice方法, 原型链编程封装数组unshift方法 ( 改变原数组 )
+Array.prototype.splice = function() {
+  this.splice(0, 0, arguments);
+  return this.length;
+}
+
+// 换个思路: 原型链编程模拟数组unshift方法 ( 不改变原数组 )
+Array.prototype.unshift = function () {
+  var res = [];
+  for (var i = 0; i < arguments.length; i++) {
+    res.push(arguments[i]);
+  }
+  for (var i = 0; i < this.length; i++) {
+    res.push(this[i]);
+  }
+  return res;
+}
+
 // 打印当前是何年何月何日何时几分几秒
 function now() {
   var date = new Date();

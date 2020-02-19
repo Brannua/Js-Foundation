@@ -14,32 +14,20 @@ function simpleClone(origin, target) {
  * 深克隆( 引用值只考虑 {} 和 [] )
  * 原始值 : number, string, boolean, undefined, null
 */
-
-var obj = {
-  name: 'asd',
-  son: {
-    name: 'qwe'
-  },
-  hobby: [
-    'ball',
-    'swim'
-  ],
-  age: 123
-}
 function deepClone(origin, target) {
-  var target = target || {};
+  var target = target || {},
+    toStr = Object.prototype.toString;
   for (var prop in origin) {
-    var temp = origin[prop];
-    if (typeof(temp) === "object" && temp !== null) {
-      if (temp instanceof Array) {
-        target[prop] = deepClone(temp, []);
+    // 不拷贝原型上的属性
+    if (origin.hasOwnProperty(prop)) {
+      var originValue = origin[prop];
+      if (typeof (originValue) === "object" && originValue !== null) {
+        target[prop] = toStr.call(originValue) === "[object Array]" ? [] : {};
+        deepClone(originValue, target[prop]);
       } else {
-        target[prop] = deepClone(temp, {});
+        target[prop] = originValue;
       }
-    } else {
-      target[prop] = temp;
     }
   }
   return target;
 }
-var demo = deepClone(obj);
