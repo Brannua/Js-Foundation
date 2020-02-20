@@ -22,53 +22,58 @@ function isNaN(num) { //传入参数
   return res === "NaN" ? true : false;
 }
 
-// 封装type
-function type(target) {
-  var ret = typeof (target),
-    template = {
-      "[object Number]": "number - object",
-      "[object String]": "string - object",
-      "[object Boolean]": "boolean - object",
+/**
+ * 弥补typeof的不足封装type方法
+ * if         null
+ * else if    number, string, boolean, undefined, function
+ * else       {}, [], 包装类
+ */
+function type(param) {
+  var curType = typeof (param);
+  if (param === null) {
+    return "null";
+  } else if (curType !== 'object') {
+    return curType;
+  } else {
+    var template = {
       "[object Array]": "array",
       "[object Object]": "object",
-    };
-  if (target == null) {
-    return "null";
-  } else if (ret === "object") { // 引用值
-    var str = Object.prototype.toString.call(target);
-    return template[str];
-  } else { // function和原始值
-    return ret;
+      "[object Number]": "object-number",
+      "[object Boolean]": "object-boolean",
+      "[object String]": "object-string",
+    },
+      key = Object.prototype.toString.call(param);
+    return template[key];
   }
 }
 
 // 原型链编程封装数组去重方法一, 利用对象属性名唯一来实现
 Array.prototype.unique = function () {
-  var temp = {},
-    len = 0,
-    length = this.length;
-  for (var i = 0; i < length; i++) {
-    temp[this[i]] = this[i];
-  }
-  for (prop in temp) {
-    this[len] = temp[prop];
-    len++;
-  }
-  this.splice(len);
-}
-
-// 原型链编程封装数组去重方法二, 利用对象属性名唯一来实现
-Array.prototype.unique = function () {
-  var temp = {},
+  var oTemp = {},
     arr = [],
     len = this.length;
   for (var i = 0; i < len; i++) {
-    if (!temp[this[i]]) {
-      temp[this[i]] = 'abc';
+    if (!oTemp[this[i]]) {
+      oTemp[this[i]] = 'temp'; // 'temp' 若换成this[i] , 则0、undefined、null这些布尔值为false的值在数组里无法去重
       arr.push(this[i]);
     }
   }
   return arr;
+}
+
+// 原型链编程封装数组去重方法二, 利用对象属性名唯一来实现
+Array.prototype.unique = function () {
+  var oTemp = {},
+    len = 0,
+    length = this.length;
+  for (var i = 0; i < length; i++) {
+    oTemp[this[i]] = this[i];
+  }
+  for (prop in oTemp) {
+    this[len] = oTemp[prop];
+    len++;
+  }
+  this.splice(len);
 }
 
 // 原型链编程封装数组push方法
