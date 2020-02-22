@@ -47,34 +47,38 @@ function type(param) {
   }
 }
 
-// 原型链编程封装数组去重方法一, 利用对象属性名唯一来实现
+// 原型链编程封装数组去重方法一, 利用对象属性名唯一来实现, 不改变原数组
 Array.prototype.unique = function () {
   var oTemp = {},
     arr = [],
     len = this.length;
   for (var i = 0; i < len; i++) {
     if (!oTemp[this[i]]) {
-      oTemp[this[i]] = 'temp'; // 'temp' 若换成this[i] , 则0、undefined、null这些布尔值为false的值在数组里无法去重
+      // 'temp' 若换成this[i] , 则0、undefined、null这些布尔值为false的值在数组里无法去重
+      oTemp[this[i]] = 'temp';
       arr.push(this[i]);
     }
   }
   return arr;
 }
 
-// 原型链编程封装数组去重方法二, 利用对象属性名唯一来实现
-Array.prototype.unique = function () {
-  var oTemp = {},
-    len = 0,
-    length = this.length;
-  for (var i = 0; i < length; i++) {
-    oTemp[this[i]] = this[i];
+// 原型链编程封装数组去重方法二, 利用对象属性名唯一来实现, 反向涂写原数组配合splice实现
+Array.prototype.unique = (function () {
+  var _oTemp = {},
+    _startCutLeft = 0;
+  return function () {
+    var length = this.length;
+    for (var i = 0; i < length; i++) {
+      if (!_oTemp[this[i]]) {
+        _oTemp[this[i]] = 'temp';
+        this[_startCutLeft] = this[i];
+        _startCutLeft++;
+      }
+    }
+    this.splice(_startCutLeft);
+    return this;
   }
-  for (prop in oTemp) {
-    this[len] = oTemp[prop];
-    len++;
-  }
-  this.splice(len);
-}
+}())
 
 // 原型链编程封装数组push方法
 Array.prototype.push = function () {
@@ -98,7 +102,7 @@ Array.prototype.unshift = function () {
 }
 
 // 利用splice方法, 原型链编程封装数组unshift方法 ( 改变原数组 )
-Array.prototype.splice = function() {
+Array.prototype.splice = function () {
   this.splice(0, 0, arguments);
   return this.length;
 }
@@ -113,6 +117,50 @@ Array.prototype.unshift = function () {
     res.push(this[i]);
   }
   return res;
+}
+
+/* 
+ * var str = 'abc'
+ * str[1] === 'b'
+ * str.charAt(1) === 'b'
+ * str.charCodeAt(1) === 98
+ * str.split("") --> ['a', 'b', 'c']
+*/
+// 原型链编程封装字符串去重, 利用对象属性名唯一来实现
+String.prototype.unique = (function () {
+  var _oTemp = {},
+    _arrTemp = [];
+  return function () {
+    var len = this.length;
+    for (var i = 0; i < len; i++) {
+      var key = this[i];
+      if (!_oTemp[key]) {
+        _oTemp[key] = "temp";
+        _arrTemp.push(key);
+      }
+    }
+    return _arrTemp.join("");
+  }
+}())
+
+// 找出字符串中第一个只出现一次的字母
+String.prototype.theFirOnce = function () {
+  var len = this.length;
+  for (var i = 0; i < len; i++) {
+    var temp = this[i],
+      flag = 0;
+    for (var j = 0; j < len; j++) {
+      if (temp === this[j]) {
+        ++flag;
+        if (flag > 1) {
+          break;
+        }
+      }
+    }
+    if (flag === 1) {
+      return temp;
+    }
+  }
 }
 
 // 打印当前是何年何月何日何时几分几秒
