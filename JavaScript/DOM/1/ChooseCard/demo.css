@@ -1,0 +1,23 @@
+.btn {
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.activeBtn {
+    background-color: #f00;
+}
+
+.card {
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    border: 1px solid;
+    display: none;
+}
+
+.activeCard {
+    display: block;
+}
