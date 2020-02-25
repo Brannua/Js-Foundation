@@ -17,15 +17,16 @@ function simpleClone(origin, target) {
 
 var obj = {
   name: 'asd',
-  son: {
-    name: 'qwe'
-  },
-  hobby: [
-    'ball',
-    'swim'
-  ],
-  age: 123
+  age: 123,
+  card: [ 'visa', 'master' ],
+  wife: {
+    name: 'bcd',
+    son: {
+      name: 'aaa'
+    }
+  }
 }
+var obj1 = {}
 function deepClone(origin, target) {
   var target = target || {};
   for (var prop in origin) {
@@ -42,4 +43,4 @@ function deepClone(origin, target) {
   }
   return target;
 }
-var demo = deepClone(obj);
+deepClone(obj, obj1);
