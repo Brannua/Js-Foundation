@@ -1,50 +1,104 @@
-// 返回元素e的第n层祖先元素结点
-Element.prototype.retParent = function (elem, n) {
-  while (elem && n--) { //容错处理,如果elem是null,不会进入循环,直接返回elem
+/**
+ * 自封装DOM-API
+ * author: lpj
+*/
+
+/**
+ * 使用childNodes属性仿children属性
+ * 将元素里面的所有元素结点封装为类数组并返回
+ */
+function returnEleChild() {
+  var child = this.childNodes,
+  len = child.length,
+  temp = { // 用一个类数组存储this里面的所有元素结点
+    length: 0,
+    push: Array.prototype.push,
+    splice: Array.prototype.splice
+  };
+  for (var i = 0; i < len; i++) {
+    if (child[i].nodeType === 1) {
+      temp.push(child[i]);
+    }
+  }
+  return temp;
+}
+Element.prototype.returnEleChild = returnEleChild;
+Document.prototype.returnEleChild = returnEleChild;
+
+/**
+ * 遍历元素结点树
+ */
+function elementTree() {
+  var children = this.children,
+    len = children.length;
+  if (len) {
+    for (var i = 0; i < len; i++) {
+      elementTree.call(children[i]);
+    }
+  }
+  return this;
+}
+Element.prototype.elementTree = elementTree;
+Document.prototype.elementTree = elementTree;
+
+
+/**
+ * 返回元素elem的第n层祖先元素结点
+ * @param {Object} elem 元素节点
+ * @param {Number} n 层数
+ */
+function retParent(elem, n) {
+  // 保证elem存在且层数大于零
+  while (elem && n) {
     elem = elem.parentElement;
+    n--;
   }
   return elem;
 }
+Element.prototype.retParent = retParent;
+Document.prototype.retParent = retParent;
 
-// 不使用children属性封装hasChildren()方法
-Element.prototype.hasChildren = function () {
-  var child = this.childNodes,
-    len = child.length;
-  for (var i = 0; i < len; i++) {
-    if (child[i].nodeType === 1) {
-      return true;
-    }
+
+/**
+ * 返回元素elem的第n个兄弟元素结点
+ * @param {Object} elem 元素节点
+ * @param {Number} n 第几个
+ * n < 0 返回前面的兄弟元素结点
+ * n > 0 返回后面的兄弟元素结点
+ */
+function returnSibiling(elem, n) {
+  if (n === 0) {
+    return elem;
   }
-  return false;
-}
-
-// 返回元素elem的第n个兄弟元素结点
-Element.prototype.returnSibiling = function (elem, n) {
   while (elem && n) {
-    if (n < 0) { // 返回前面的兄弟元素结点
+    if (n < 0) {
+      // if-else兼容IE9以下
       if (elem.previousElementSibling) {
         elem = elem.previousElementSibling;
       } else {
-        // 兼容IE9以下
         for (elem = elem.previousSibling; elem && elem.nodeType !== 1; elem = elem.previousSibling);
       }
       n++;
-    } else { // 返回后面的兄弟元素结点
+    } else {
+      // if-else兼容IE9以下
       if (elem.nextElementSibling) {
         elem = elem.nextElementSibling;
       } else {
-        // 兼容IE9以下
         for (elem = elem.nextSibling; elem && elem.nodeType !== 1; elem = elem.nextSibling);
       }
       n--;
     }
   }
-  // n == 0 不进入while循环,直接返回元素本身
   return elem;
 }
+Element.prototype.returnSibiling = returnSibiling;
+Document.prototype.returnSibiling = returnSibiling;
 
-// 封装myChildren功能,解决以前部分浏览器的兼容性问题
-Element.prototype.myChildren = function () {
+
+/**
+ * 封装兼容性children方法
+ */
+function children() {
   var arr = [],
     child = this.childNodes,
     len = child.length;
@@ -55,9 +109,51 @@ Element.prototype.myChildren = function () {
   }
   return arr;
 }
+Element.prototype.children = children;
+Document.prototype.children = children;
 
-// 忽略老版本浏览器封装函数insertAfter();功能类似insertBefore();
-Element.prototype.insertAfter = function (newItem, targetItem) {
+
+/**
+ * 封装hasChildren()方法
+ * 使用childNodes属性
+ */
+function hasChildren() {
+  var child = this.childNodes,
+    len = child.length;
+  for (var i = 0; i < len; i++) {
+    if (child[i].nodeType === 1) {
+      return true;
+    }
+  }
+  return false;
+}
+Element.prototype.hasChildren = hasChildren;
+Document.prototype.hasChildren = hasChildren;
+
+
+/**
+ * 封装函数insertAfter();功能类似于insertBefore();借用insertBefore();
+ * @param {Object} newItem 要插入的DOM元素
+ * @param {Object} targetItem 参考插入的DOM元素
+ */
+function insertAfter_1(newItem, targetItem) {
+  var afterItem = targetItem.nextElementSibling;
+  if (afterItem) {
+    document.insertBefore(newItem, afterItem);
+  } else {
+    this.appendChild(newItem);
+  }
+}
+Element.prototype.insertAfter_2 = insertAfter_2;
+Document.prototype.insertAfter_2 = insertAfter_2;
+
+
+/**
+ * 封装函数insertAfter();功能类似insertBefore();
+ * @param {Object} newItem 要插入的DOM元素
+ * @param {Object} targetItem 参考插入的DOM元素
+ */
+function insertAfter_2(newItem, targetItem) {
   var arr = [],
     childNodes = this.children,
     len = childNodes.length;
@@ -78,24 +174,20 @@ Element.prototype.insertAfter = function (newItem, targetItem) {
   }
   return arr;
 }
+Element.prototype.insertAfter_2 = insertAfter_2;
+Document.prototype.insertAfter_2 = insertAfter_2;
 
-// 方法改进
-Element.prototype.insertBefore = function (targetNode, afterNode) {
-  var beforeNode = afterNode.nextNodeSibiling;
-  if (beforeNode == null) {
-    this.appendChild(targetNode);
-  } else {
-    this.insertBefore(targetNode, beforeNode);
-  }
-}
 
-// 将目标节点内部的节点顺序逆序, eg: <div><a></a><em></em></div> --> <div><em></em><a></a></div>
-Element.prototype.tranverseNode = function () {
-  var childElementNodes = this.children;
-  var len = childElementNodes.length;
-  // 将所有子节点放入数组然后reverse()
-  var arr = [];
-  for (var i = 0; i < childElementNodes.length; i++) {
+/**
+ * 将目标节点内部的节点顺序逆序
+ * eg: <div><a></a><em></em></div> --> <div><em></em><a></a></div>
+ */
+function tranverseNode_1() {
+  var childElementNodes = this.children,
+    len = childElementNodes.length,
+    arr = [];
+  // 将所有子节点拷贝到临时数组然后reverse()
+  for (var i = 0; i < len; i++) {
     arr.push(childElementNodes[i]);
   }
   arr.reverse();
@@ -103,61 +195,61 @@ Element.prototype.tranverseNode = function () {
   for (var i = 0; i < len; i++) {
     childElementNodes[0].remove();
   }
-  // appendChild
+  // 在将逆序后的子节点装回
   for (var i = 0; i < len; i++) {
-    this.appendChild(arr[i])
+    this.appendChild(arr[i]);
   }
-  return arr;
 }
+Element.prototype.tranverseNode_1 = tranverseNode_1;
+Document.prototype.tranverseNode_1 = tranverseNode_1;
 
-// 方法改进
-Element.prototype.tranverseNode = function () {
+
+/**
+ * 将目标节点内部的节点顺序逆序
+ * 方法改进，利用appendChild的剪切属性
+ * 从倒数第二个开始向第一个子元素遍历并appendChild
+ * eg: <div><a></a><em></em></div> --> <div><em></em><a></a></div>
+ */
+function tranverseNode_2() {
   var childNodes = this.childNodes;
   var len = childNodes.length;
   for (var i = len - 2; i >= 0; i--) {
     this.appendChild(childNodes[i]);
   }
 }
+Element.prototype.tranverseNode_2 = tranverseNode_2;
+Document.prototype.tranverseNode_2 = tranverseNode_2;
 
-// 不使用children将元素里面的所有元素结点装到一个数组里面并返回
-Element.prototype.returnEleChild = function (node) {
-  /* 用一个类数组存储node里面所有元素结点,这样temp返回值就和使用children的返回值很像 */
-  var temp = {
-    length: 0,
-    push: Array.prototype.push,
-    splice: Array.prototype.splice //可以让对象长得更加像数组(其实就是类数组)
-  },
-    child = node.childNodes,
-    len = child.length;
-  for (var i = 0; i < len; i++) {
-    if (child[i].nodeType === 1) {
-      temp.push(child[i]);
-    }
-  }
-  return temp;
-}
 
-// 兼容ie和其他浏览器,获取传入元素的css样式表
-Element.prototype.getStyle = function (elem, prop) {
+/**
+ * 封装兼容性的获取传入元素css样式表的方法
+ * @param {String} prop 传入的css属性名
+ */
+function getStyle(prop) {
   if (window.getComputedStyle) {
-      /* 因为prop是字符串形式,所以必须使用[prop]的方式 */
-      return window.getComputedStyle(elem, null)[prop];
+    // 因为prop是字符串形式,所以必须使用[prop]的方式
+    return window.getComputedStyle(this, null)[prop];
   } else {
-      return elem.currentStyle[prop];
+    return this.currentStyle[prop];
   }
 }
+Element.prototype.getStyle = getStyle;
+Document.prototype.getStyle = getStyle;
 
-// 兼容性方法
-Element.prototype.addEvent = function (elem, type, handle) {
+
+/**
+ * 兼容性方法
+ */
+function addEvent(elem, type, handle) {
   if (elem.addEventListener) {
-      elem.addEventListener(type, handle, false);
+    elem.addEventListener(type, handle, false);
   } else if (elem.attachEvent) {
-      elem.attachEvent('on' + type, function () {
-          handle.call(elem);
-      });
+    elem.attachEvent('on' + type, function () {
+      handle.call(elem);
+    });
   } else {
-      elem['on' + type] = handle;
+    elem['on' + type] = handle;
   }
 }
-
-// 遍历元素结点树
+Element.prototype.addEvent = addEvent;
+Document.prototype.addEvent = addEvent;

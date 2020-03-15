@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <p></p>
+    <span></span>
+    <strong></strong>
+    <a href=""></a>
+    <img src="" alt="">
+  </div>
+  <script src="./DOMFunctionTools.js"></script>
+  <script>
+    var oDiv = document.getElementsByTagName('div')[0];
+    console.log(oDiv.children);
+    oDiv.tranverseNode_1();
+    console.log(oDiv.children);
+  </script>
+</body>
+</html>

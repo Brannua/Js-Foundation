@@ -1,3 +1,4 @@
+
 /**
  * 兼容性 Ajax
  * @param {*} method 发送请求的方式
@@ -6,7 +7,6 @@
  * @param {*} callback 回调函数
  * @param {*} flag 默认为 true , 表示发送ajax请求是异步操作
  */
-
 function ajaxFunc(method, url, data, callback, flag) {
   // 获取兼容IE的AJAX对象
   var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHttp');
