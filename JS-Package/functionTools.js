@@ -122,15 +122,15 @@ Array.prototype.push = function () {
 }
 
 
-// 纯原生JS且改变原数组
+// 原生JS封装unshift方法( 改变原数组 )
 Array.prototype.unshift = function () {
   var arguLen = arguments.length,
     totalLength = arguLen + this.length;
-  /* 加长原数组, 并将原数据整体后移 */
+  // 加长原数组, 并将原数据整体后移
   for (var i = totalLength - 1; i >= arguLen; i--) {
     this[i] = this[i - arguLen];
   }
-  /* 数组前面空出的位置放置新数据 */
+  // 数组前面空出的位置放置新数据
   for (var i = 0; i < arguLen; i++) {
     this[i] = arguments[i];
   }
@@ -138,7 +138,7 @@ Array.prototype.unshift = function () {
 }
 
 
-// 不改变原数组
+// 原生JS封装unshift方法( 不改变原数组 )
 Array.prototype.unshiftDemo = function () {
   var res = [];
   for (var i = 0; i < arguments.length; i++) {
@@ -191,47 +191,58 @@ function type(param) {
 }
 
 
-// 打印当前是何年何月何日何时几分几秒
+// 返回当前的年月日时分秒
 function now() {
   var date = new Date();
-  console.log(date.getFullYear() + "年", date.getMonth() + 1 + "月", date.getDate() + "日", date.getHours() + "时", date.getMinutes() + "分", date.getSeconds() + "秒");
+  return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日 ${date.getHours()} 时 ${date.getMinutes()} 分 ${date.getSeconds()} 秒`;
 }
 
 
-// 兼容性方法,返回浏览器视口尺寸
-function getViewportOffset() {
-  if (window.innerHeight) { //IE9以上版本直接使用下面的语法
+/**
+ * 封装返回滚动条滚动距离的兼容性方法
+ * 查看滚动条的滚动距离
+ *   window.pageXOffset( IE8及其以下不兼容 )
+ *   window.pageYOffset( IE8及其以下不兼容 )
+ *   document.body.scrollLeft/scrollTop || documentElement.scrollLeft/scrollTop
+ *   兼容性混乱，用时取两值相加，因为不可能出现两者都有值的情况
+*/
+function getScrollOffset() {
+  if (window.pageXOffset) {
     return {
-      width: window.innerWidth,
-      height: window.innerHeight
+      x: window.pageXOffset,
+      y: window.pageYOffset,
     }
   } else {
-    if (document.compatMode == "CSS1Compat") { //标准模式适用于任意浏览器
-      return {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.cilentHeight
-      }
-    } else { //适用于混杂模式下的浏览器,向后兼容5个版本浏览器
-      return {
-        width: document.body.clientWidth,
-        height: document.body.clientHeight
-      }
+    return {
+      x: document.body.scrollLeft + document.documentElement.scrollLeft,
+      y: document.body.scrollTop + document.documentElement.scrollTop,
     }
   }
 }
 
 
-// 兼容性方法,返回滚动条滚动距离
-function getScrollOffset() {
-  if (window.pageXOffset) {
+// 封装返回浏览器视口尺寸的兼容性方法
+function getViewportOffset() {
+  if (window.innerHeight) {
+    // 处理IE9及以上版本
     return {
-      x: window.pageXOffset,
-      y: window.pageYOffset
+      width: window.innerWidth,
+      height: window.innerHeight,
     }
   } else {
-    return {
-      x: document.body.scrollLeft + document.documentElement.scrollLeft,
-      y: document.body.scrollTop + document.documentElement.scrollTop
+    if (document.compatMode === "CSS1Compat") {
+      // 低于IE9的版本中处理标准模式，适用于任意浏览器
+      return {
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.cilentHeight,
+      }
+    } else {
+      // document.compatMode === "backCompat"
+      // 低于IE9的版本中处理混杂模式，chrome向前兼容5个浏览器的版本
+      return {
+        width: document.body.clientWidth,
+        height: document.body.clientHeight,
+      }
     }
   }
 }
