@@ -9,12 +9,12 @@
  */
 function returnEleChild() {
   var child = this.childNodes,
-  len = child.length,
-  temp = { // 用一个类数组存储this里面的所有元素结点
-    length: 0,
-    push: Array.prototype.push,
-    splice: Array.prototype.splice
-  };
+    len = child.length,
+    temp = { // 用一个类数组存储this里面的所有元素结点
+      length: 0,
+      push: Array.prototype.push,
+      splice: Array.prototype.splice
+    };
   for (var i = 0; i < len; i++) {
     if (child[i].nodeType === 1) {
       temp.push(child[i]);
@@ -219,6 +219,29 @@ function tranverseNode_2() {
 }
 Element.prototype.tranverseNode_2 = tranverseNode_2;
 Document.prototype.tranverseNode_2 = tranverseNode_2;
+
+
+/**
+ * 封装返回元素相对于文档的坐标函数
+ */
+function getElemPosition() {
+  if (this.offsetParent) {
+    // 有已经定位的父级
+    // 返回递归累加的坐标
+    return {
+      x: this.offsetLeft + getElemPosition.call(this.offsetParent),
+      y: this.offsetTop + getElemPosition.call(this.offsetParent),
+    }
+  }
+  // 没有已经定位的父级
+  // 直接返回相对于文档的坐标
+  return {
+    x: this.offsetLeft,
+    y: this.offsetTop,
+  }
+}
+Element.prototype.getElemPosition = getElemPosition;
+Document.prototype.getElemPosition = getElemPosition;
 
 
 /**
