@@ -96,7 +96,7 @@ Document.prototype.returnSibiling = returnSibiling;
 
 
 /**
- * 封装兼容性children方法
+ * 兼容性children方法
  */
 function children() {
   var arr = [],
@@ -222,7 +222,7 @@ Document.prototype.tranverseNode_2 = tranverseNode_2;
 
 
 /**
- * 封装返回元素相对于文档的坐标函数
+ * 返回元素相对于文档的坐标函数
  */
 function getElemPosition() {
   if (this.offsetParent) {
@@ -253,6 +253,7 @@ function getStyle(prop) {
     // 因为prop是字符串形式,所以必须使用[prop]的方式
     return window.getComputedStyle(this, null)[prop];
   } else {
+    // 兼容低于IE9的浏览器
     return this.currentStyle[prop];
   }
 }
