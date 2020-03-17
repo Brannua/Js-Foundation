@@ -262,17 +262,21 @@ Document.prototype.getStyle = getStyle;
 
 
 /**
- * 兼容性方法
+ * 给DOM对象绑定事件的兼容性方法
+ * @param {String} type 事件类型
+ * @param {Function} handle 事件处理函数
  */
-function addEvent(elem, type, handle) {
-  if (elem.addEventListener) {
-    elem.addEventListener(type, handle, false);
-  } else if (elem.attachEvent) {
-    elem.attachEvent('on' + type, function () {
-      handle.call(elem);
+function addEvent(type, handle) {
+  // 处理IE9以上版本浏览器
+  if (this.addEventListener) {
+    this.addEventListener(type, handle, false);
+  } else if (this.attachEvent) {
+    // 处理IE浏览器
+    this.attachEvent('on' + type, function () {
+      handle.call(this);
     });
   } else {
-    elem['on' + type] = handle;
+    this['on' + type] = handle;
   }
 }
 Element.prototype.addEvent = addEvent;
