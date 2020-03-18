@@ -1,0 +1,9 @@
+#box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 200px;
+  background-color: #f00;
+  cursor: pointer;
+}
