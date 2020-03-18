@@ -44,10 +44,9 @@ function getElemPosition() {
 Element.prototype.getElemPosition = getElemPosition;
 Document.prototype.getElemPosition = getElemPosition;
 
+// ------------------------------------------------------
 
 var box = document.getElementById('box'),
-  curX = 0,
-  curY = 0,
   cursorPosi = {
     x: 0,
     y: 0
@@ -74,15 +73,15 @@ function leaveHandler() {
   this.removeEventListener('mouseup', upHandler, false);
 }
 
+/**
+ * 初始化小方块和鼠标的坐标信息
+ */
 function initPositions(event) {
-  // 记录小方块左上角坐标
+  // 初始化小方块左上角坐标，便于后续拖动从行间样式取值
   var {x, y} = this.getElemPosition();
-  curX = parseInt(x);
-  curY = parseInt(y);
-  // 初始化小方块位置，便于后续拖动从行间样式取值
-  this.style.left = curX;
-  this.style.top = curY;
-  // 记录鼠标坐标
+  this.style.left = parseInt(x);
+  this.style.top = parseInt(y);
+  // 初始化鼠标坐标
   cursorPosi.x = event.x;
   cursorPosi.y = event.y;
 }
@@ -91,7 +90,7 @@ function initPositions(event) {
  * 鼠标按下操作
  */
 function downHandler(event) {
-  // 初始化小方块和鼠标的位置信息
+  // 初始化小方块和鼠标的坐标信息
   initPositions.call(this, event);
   // 监听拖动小方块
   this.addEvent('mousemove', moveHandler, false);
@@ -101,11 +100,12 @@ function downHandler(event) {
  * 鼠标抬起操作
  */
 function upHandler() {
+  // 取消监听拖动小方块
   this.removeEventListener('mousemove', moveHandler, false);
 }
 
 /**
- * 小方块移动函数
+ * 小方块拖动函数
  */
 function moveHandler(event) {
   // 小方块移动
