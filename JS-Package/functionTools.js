@@ -49,7 +49,9 @@ String.prototype.uniqueStr = (function () {
 }());
 
 
-// 找出字符串中第一个只出现一次的字母
+/**
+ * 找出字符串中第一个只出现一次的字母
+ */
 String.prototype.theFirOnce = function () {
   var len = this.length;
   for (var i = 0; i < len; i++) {
@@ -113,7 +115,9 @@ Array.prototype.uniqueArrTwo = (function () {
 }());
 
 
-// 模拟push方法
+/**
+ * 模拟push方法
+ */
 Array.prototype.push = function () {
   for (var i = 0; i < arguments.length; i++) {
     this[this.length] = arguments[i];
@@ -122,7 +126,9 @@ Array.prototype.push = function () {
 }
 
 
-// 原生JS封装unshift方法( 改变原数组 )
+/**
+ * 原生JS封装unshift方法( 改变原数组 )
+ */
 Array.prototype.unshift = function () {
   var arguLen = arguments.length,
     totalLength = arguLen + this.length;
@@ -138,7 +144,9 @@ Array.prototype.unshift = function () {
 }
 
 
-// 原生JS封装unshift方法( 不改变原数组 )
+/**
+ * 原生JS封装unshift方法( 不改变原数组 )
+ */
 Array.prototype.unshiftDemo = function () {
   var res = [];
   for (var i = 0; i < arguments.length; i++) {
@@ -191,7 +199,9 @@ function type(param) {
 }
 
 
-// 返回当前的年月日时分秒
+/**
+ * 返回当前的年月日时分秒
+ */
 function now() {
   var date = new Date();
   return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日 ${date.getHours()} 时 ${date.getMinutes()} 分 ${date.getSeconds()} 秒`;
@@ -221,7 +231,9 @@ function getScrollOffset() {
 }
 
 
-// 封装返回浏览器视口尺寸的兼容性方法
+/**
+ * 封装返回浏览器视口尺寸的兼容性方法
+ */
 function getViewportOffset() {
   if (window.innerHeight) {
     // 处理IE9及以上版本
@@ -248,7 +260,41 @@ function getViewportOffset() {
 }
 
 
-// 兼容性方法,按需加载js脚本
+/**
+ * 封装取消冒泡的兼容性方法
+ * @param {Object} event 事件对象
+ */
+function stopBubble(event) {
+  if (event.stopPropagation) {
+    // W3C标准
+    event.stopPropagation();
+  } else {
+    // 兼容IE
+    event.cancelBubble = true;
+  }
+}
+
+
+/**
+ * 封装阻止默认事件的兼容性方法
+ * @param {Object} event 事件对象
+ */
+function cancleHandler(event) {
+  if (event.preventDefault) {
+    // W3C标准
+    event.preventDefault();
+  } else {
+    // 兼容IE
+    event.returnValue = false;
+  }
+}
+
+
+/**
+ * 封装按需加载js脚本的兼容性方法
+ * @param {String} url 要加载的js脚本的url
+ * @param {Function} callback 回调函数
+ */
 function loadScript(url, callback) {
   var script = document.createElement('script');
   script.type = "text/javascript";
@@ -271,24 +317,4 @@ function loadScript(url, callback) {
   }
   // 确保绑定上事件之后再加载js脚本保证状态码会变化(从而会触发事件)
   script.src = url; //此时系统就会异步地下载js脚本文件
-}
-
-
-// 取消冒泡
-function stopBubble(event) {
-  if (event.stopPropagation) {
-    event.stopPropagation();
-  } else {
-    event.cancelBubble = true;
-  }
-}
-
-
-// 阻止默认事件
-function cancleHandler(event) {
-  if (event.preventDefault) {
-    event.preventDefault();
-  } else {
-    event.returnValue = false;
-  }
 }
