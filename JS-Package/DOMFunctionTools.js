@@ -229,15 +229,15 @@ function getElemPosition() {
     // 有已经定位的父级
     // 返回递归累加的坐标
     return {
-      x: this.offsetLeft + getElemPosition.call(this.offsetParent),
-      y: this.offsetTop + getElemPosition.call(this.offsetParent),
+      x: parseInt(this.offsetLeft + getElemPosition.call(this.offsetParent)),
+      y: parseInt(this.offsetTop + getElemPosition.call(this.offsetParent)),
     }
   }
   // 没有已经定位的父级
   // 直接返回相对于文档的坐标
   return {
-    x: this.offsetLeft,
-    y: this.offsetTop,
+    x: parseInt(this.offsetLeft),
+    y: parseInt(this.offsetTop),
   }
 }
 Element.prototype.getElemPosition = getElemPosition;
@@ -281,3 +281,53 @@ function addEvent(type, handle) {
 }
 Element.prototype.addEvent = addEvent;
 Document.prototype.addEvent = addEvent;
+
+/**
+ * 封装拖拽函数
+ */
+function drag() {
+
+  // 监听点击元素
+  this.addEventListener('mousedown', mousedownHandler, false);
+  // 定位，让元素可被拖动
+  this.style.position = 'absolute';
+  // 记录鼠标点相对于元素的位置
+  var offsetX,
+    offsetY;
+
+  // 初始化一系列位置信息
+  function initPositions(event) {
+    var e = event || window.event;
+    var {x, y} = this.getElemPosition();
+    // 初始化元素的位置
+    this.style.left = `${x}px`;
+    this.style.top = `${y}px`;
+    // 初始化鼠标点相对于元素的位置
+    offsetX = e.pageX - x;
+    offsetY = e.pageY - y;
+  }
+
+  // 处理点击元素
+  function mousedownHandler(event) {
+    // 初始化一系列位置信息
+    initPositions.call(this, event);
+    // 监听事件
+    document.addEventListener('mousemove', mousemoveHandler, false);
+    document.addEventListener('mouseup', mouseupHandler, false);
+  }
+
+  // 处理移动元素
+  var that = this;
+  function mousemoveHandler(event) {
+    var e = event || window.event;
+    that.style.left = `${ e.pageX - offsetX }px`;
+    that.style.top = `${ e.pageY - offsetY }px`;
+  }
+
+  // 处理鼠标抬起
+  function mouseupHandler() {
+    this.removeEventListener('mousemove', mousemoveHandler, false);
+  }
+}
+Element.prototype.drag = drag;
+Document.prototype.drag = drag;
