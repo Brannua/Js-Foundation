@@ -287,16 +287,22 @@ Document.prototype.addEvent = addEvent;
  */
 function drag() {
 
-  // 监听点击元素
-  this.addEventListener('mousedown', mousedownHandler, false);
   // 定位，让元素可被拖动
   this.style.position = 'absolute';
+  // 监听点击元素
+  this.addEvent('mousedown', function(event){
+    // 初始化一系列位置信息
+    _initPositions.call(this, event);
+    // 监听事件
+    document.addEvent('mousemove', mousemoveHandler);
+    document.addEvent('mouseup', mouseupHandler);
+  });
+  
   // 记录鼠标点相对于元素的位置
   var offsetX,
     offsetY;
-
   // 初始化一系列位置信息
-  function initPositions(event) {
+  function _initPositions(event) {
     var e = event || window.event;
     var {x, y} = this.getElemPosition();
     // 初始化元素的位置
@@ -305,15 +311,6 @@ function drag() {
     // 初始化鼠标点相对于元素的位置
     offsetX = e.pageX - x;
     offsetY = e.pageY - y;
-  }
-
-  // 处理点击元素
-  function mousedownHandler(event) {
-    // 初始化一系列位置信息
-    initPositions.call(this, event);
-    // 监听事件
-    document.addEventListener('mousemove', mousemoveHandler, false);
-    document.addEventListener('mouseup', mouseupHandler, false);
   }
 
   // 处理移动元素
