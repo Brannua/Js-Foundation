@@ -296,25 +296,31 @@ function cancleHandler(event) {
  * @param {Function} callback 回调函数
  */
 function loadScript(url, callback) {
+  // 创建script标签
   var script = document.createElement('script');
   script.type = "text/javascript";
-  //解析下载完毕的脚本并执行
+  // 插入到dom中, 使js可被执行
   document.head.appendChild(script);
-  // 确保js脚本下载完毕(load事件/监听状态码变化)再执行工具方法
+  // 监听tools.js下载进度
   if (script.readyState) {
     // 适用于IE
     script.onreadystatechange = function () {
-      if (script.readyState == 'complete' ||
-        script.readyState == 'loaded') {
-        obj[callback]();
+      if (script.readyState === 'complete' ||
+        script.readyState === 'loaded') {
+        callback();
       }
     }
   } else {
     // 适用于chrome firefox opera Safari
     script.onload = function () {
-      obj[callback]();
+      callback();
     }
   }
-  // 确保绑定上事件之后再加载js脚本保证状态码会变化(从而会触发事件)
-  script.src = url; //此时系统就会异步地下载js脚本文件
+  // 确保绑定上事件之后再异步下载js脚本保证状态码会变化(从而会触发事件)
+  script.src = url;
 }
+
+// 调用方式
+// loadScript('tools.js', function(){
+//   ...
+// })
