@@ -290,21 +290,21 @@ function drag() {
   // 定位，让元素可被拖动
   this.style.position = 'absolute';
   // 监听点击元素
-  this.addEvent('mousedown', function(event){
+  this.addEvent('mousedown', function (event) {
     // 初始化一系列位置信息
     _initPositions.call(this, event);
     // 监听事件
     document.addEvent('mousemove', mousemoveHandler);
     document.addEvent('mouseup', mouseupHandler);
   });
-  
+
   // 记录鼠标点相对于元素的位置
   var offsetX,
     offsetY;
   // 初始化一系列位置信息
   function _initPositions(event) {
     var e = event || window.event;
-    var {x, y} = this.getElemPosition();
+    var { x, y } = this.getElemPosition();
     // 初始化元素的位置
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
@@ -317,8 +317,8 @@ function drag() {
   var that = this;
   function mousemoveHandler(event) {
     var e = event || window.event;
-    that.style.left = `${ e.pageX - offsetX }px`;
-    that.style.top = `${ e.pageY - offsetY }px`;
+    that.style.left = `${e.pageX - offsetX}px`;
+    that.style.top = `${e.pageY - offsetY}px`;
   }
 
   // 处理鼠标抬起
