@@ -232,6 +232,21 @@ function getScrollOffset() {
 
 
 /**
+ * 封装fixed定位函数( 用于IE6 )
+ * IE6没有fixed定位,用position:absolute模拟
+ */
+function myFixed(left, top) {
+  this.style.position = 'absolute';
+  var {x, y} = getScrollOffset();
+  this.style.left = parseInt(this.style.left) + x + 'px';
+  this.style.top = parseInt(this.style.top) + y + 'px';
+}
+Element.prototype.myFixed = myFixed;
+Document.prototype,myFixed = myFixed;
+
+
+
+/**
  * 封装返回浏览器视口尺寸的兼容性方法
  */
 function getViewportOffset() {
