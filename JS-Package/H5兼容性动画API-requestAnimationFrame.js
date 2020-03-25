@@ -3,7 +3,7 @@ window.requestAnimationFrame = (function () {
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     function (callback) {
-      window.setTimeout(callback, 1000 / 60); // 页面每秒刷新60次
+      window.setTimeout(callback, 1000 / 60); // 适用于屏幕刷新率为60hz
     }
 }());
 window.cancelAnimationFrame = (function () {
