@@ -1,0 +1,21 @@
+{
+  "title": "JS笔记书",
+  "author": "lpj",
+  "description": "记录整理JavaScript基础到高级知识",
+  "language": "zh-hans",
+  "plugins": [
+    "back-to-top-button",
+    "code",
+    "expandable-chapters-small",
+    "github",
+    "-lunr",
+    "-search",
+    "search-pro",
+    "splitter"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/Brannua"
+    }
+  }
+}
