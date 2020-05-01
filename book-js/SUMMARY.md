@@ -55,8 +55,11 @@
 
 * [es6+系列](./es6+/0.md)
   * [作用域的分类](./es6+/1.md)
+  * [class & 继承](./es6+/2.md)
 
 * [Vue总复习](./Vue/0.md)
+
+* [webpack总复习](./webpack/0.md)
 
 * [数据结构与算法系列](./algorithm/0.md)
   * [线性结构](./algorithm/1.md)
