@@ -282,6 +282,34 @@ function addEvent(type, handle) {
 Element.prototype.addEvent = addEvent;
 Document.prototype.addEvent = addEvent;
 
+
+
+/**
+ * 拥有事件代理特性的给DOM对象绑定事件的方法
+ * @param {String} type 事件类型
+ * @param {Function} handle 事件处理函数
+ */
+function bindEvent(type, handle, selector) {
+  this.addEventListener(type, function (event) {
+    let e = event || window.event
+      target = e.target || e.srcElement
+
+    if (selector) {
+      // 代理绑定
+      if (target.matches(selector)) {
+        handle.call(target, e)
+      }
+    } else {
+      // 普通绑定
+      handle.call(target, e)
+    }
+
+  })
+}
+Element.prototype.bindEvent = bindEvent;
+Document.prototype.bindEvent = bindEvent;
+
+
 /**
  * 封装拖拽函数
  */
