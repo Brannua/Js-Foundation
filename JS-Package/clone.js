@@ -29,3 +29,11 @@ function deepClone(origin) {
 
   return result
 }
+
+
+/**
+ * 一行代码深克隆
+ */
+function deepCloneByJson(origin) {
+  return JSON.parse(JSON.stringify(origin))
+}

@@ -5,9 +5,6 @@ function isEqual(origin, target) {
   if (origin === target) {
     return true
   }
-  if (origin === null || target === null) {
-    return origin === target
-  }
   if (typeof(origin) !== 'object' || typeof(target) !== 'object') {
     return origin === target
   }
