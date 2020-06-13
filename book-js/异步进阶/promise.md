@@ -45,3 +45,11 @@ Promise.resolve().then(() => { log(1); throw new Error('error1') }).catch(() => 
 
 Promise.resolve().then(() => { log(1); throw new Error('error1') }).catch(() => { log(2) }).catch(() => { log(3) })
 ```
+
+- 初始化Promise时, 传入的函数会立刻被执行
+
+  ```js
+    new Promise((resolve, reject) => {
+      // 立刻执行
+    })
+  ```

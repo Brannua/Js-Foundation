@@ -37,10 +37,13 @@
   * [函数记忆思想优化代码](./ECMAScript/20.md)
   * [函数防抖 & 函数节流](./ECMAScript/21.md)
 
-* [异步进阶](./异步进阶/event-loop.md)
+* [异步进阶](./异步进阶/异步练习题.md)
   * [promise](./异步进阶/promise.md)
   * [async-await](./异步进阶/async-await.md)
+  * [event-loop](./异步进阶/event-loop.md)
   * [异步的本质](./异步进阶/异步的本质.md)
+  * [宏任务macroTask微任务microTask](./异步进阶/宏任务macroTask微任务microTask.md)
+  * [异步遍历](./异步进阶/异步遍历.md)
 
 * [DOM系列](./DOM/0.md)
   * [DOM操作初探](./DOM/1.md)
