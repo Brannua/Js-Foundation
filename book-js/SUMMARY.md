@@ -37,7 +37,7 @@
   * [函数记忆思想优化代码](./ECMAScript/20.md)
   * [函数防抖 & 函数节流](./ECMAScript/21.md)
 
-* [异步进阶](./异步进阶/异步练习题.md)
+* [异步进阶](./异步进阶/执行顺序练习题.md)
   * [promise](./异步进阶/promise.md)
   * [async-await](./异步进阶/async-await.md)
   * [event-loop](./异步进阶/event-loop.md)
