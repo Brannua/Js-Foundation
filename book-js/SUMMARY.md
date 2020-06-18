@@ -48,6 +48,8 @@
 * [http系列](./http/README.md)
   * [http状态码](./http/http状态码.md)
   * [什么是Restful-API](./http/什么是Restful-API.md)
+  * [headers](./http/headers.md)
+  * [http缓存机制](./http/http缓存机制.md)
 
 * [DOM系列](./DOM/0.md)
   * [DOM操作初探](./DOM/1.md)
