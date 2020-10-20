@@ -33,6 +33,7 @@ function deepClone(origin) {
 
 /**
  * 一行代码深克隆
+ * 此方法不是万能的: https://www.cnblogs.com/zhaohd/p/13813702.html
  */
 function deepCloneByJson(origin) {
   return JSON.parse(JSON.stringify(origin))
